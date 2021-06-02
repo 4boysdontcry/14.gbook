@@ -7,5 +7,5 @@ html, body {font-family: 'Noto Sans KR', sans-serif;}
 
 
 @media screen and (max-width: 1200px) {
-    .wrapper { max-width: calc(100%-1em); }
+    .wrapper { width: calc(100%-1em); }
 }

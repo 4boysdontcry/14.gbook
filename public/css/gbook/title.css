@@ -1,7 +1,7 @@
-.title-wrapper {margin: 1em 0; font-size: 1em;}
+.title-wrapper {margin: 1.5em 0; font-size: 1em;}
 .title-wrapper h2.title {font-size: 2em;}
-.title-wrapper h3.title {font-size: 1.25em; color: #666; padding-left: 3em;}
+.title-wrapper h3.title {font-size: 1.25em; color: #666; padding-left: 2.5em;}
 
 @media screen and (max-width: 768px) {
-    .title-wrapper {font-size: .5em}
+	.title-wrapper {font-size: .625em;}
 }

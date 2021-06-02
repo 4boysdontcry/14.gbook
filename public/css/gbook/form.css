@@ -3,10 +3,9 @@
 .form-wrapper > :last-child {flex-grow: 0; margin-left: 1%;}
 .form-wrapper .input-wrap > :first-child {display: flex;}
 .form-wrapper .input-wrap > :first-child > input[name="writer"] {width: 30%; margin-right: 1%;}
-.form-wrapper .input-wrap > :first-child > input[name='content'] {}
-
+.form-wrapper .input-wrap > :first-child > input[name="content"] {}
 .form-wrapper input {margin: .25em 0;}
 .form-wrapper .form-control-file {padding: .5em 0;}
-.form-wrapper .comment {padding: .5em 0; color: #e05c5c;}
+.form-wrapper .comment {padding: .5em 0; color: #a70707;}
 .form-wrapper .bt-wrap {padding-top: 4px;}
 .form-wrapper .bt-wrap button {height: 38px; width: 100px;}
