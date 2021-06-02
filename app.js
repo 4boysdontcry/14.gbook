@@ -1,35 +1,36 @@
-/*  *********************** global *********************** */
+/**************** Global ******************/
 const express = require('express');
 const app = express();
-const path = ('path')
+const path = require('path');
 require('dotenv').config();
 require('./modules/server-init')(app, 3000);
 
 
-/*  ***********************  middlewares *********************** */
-const { createError, error404, error500 } = require('./modules/error-mw');
+/**************** Middlewares ******************/
+const { createError, error404, error500 } = require('./middlewares/error-mw');
 
 
-/*  *********************** views *********************** */
+/**************** Views ******************/
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, './views'));
 app.locals.pretty = true;
 
 
-/*  *********************** req.body *********************** */
+/**************** req.body ******************/
 app.use(express.json());
-app.use(express.urlencoded({extended: false}))
+app.use(express.urlencoded({ extended: false }));
 
 
-/*  *********************** Router : Static *********************** */
+/**************** Router: static ******************/
 app.use('/', express.static(path.join(__dirname, './public')));
 app.use('/uploads', express.static(path.join(__dirname, './storages')));
 
 
-/*  *********************** Router : Dynamic *********************** */
+/**************** Router: dynamic ******************/
+const gbookRouter = require('./routes/gbook-router');
 
+app.use('/gbook', gbookRouter);
 
-
-/*  *********************** Router : Error *********************** */
+/**************** Router: error ******************/
 app.use(error404);
 app.use(error500);
