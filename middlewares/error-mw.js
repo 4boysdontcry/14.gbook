@@ -12,7 +12,7 @@ const error500 = (err, req, res, next) => {
 	const ejs = {
     status: err.status === 404 ? 404 : 500, 
     message: err.code || err.message, 
-    headTitle: `ERROR ${err.status === 404 ? 404 : 500}`,
+    tabTitle: `ERROR ${err.status === 404 ? 404 : 500}`,
     description: err.description || err.message
 	}
 	res.render('error/error', ejs);
