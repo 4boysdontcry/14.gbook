@@ -14,7 +14,7 @@ const ejs = {
 }
 
 router.get('/', async (req,res,next) => {
-    res.render('gbook/gbook', { ...ejs })
+    res.render('gbook/gbook.ejs', { ...ejs })
 })
 
 router.post('/create', upload.single('upfile'), async (req, res, next) => {
@@ -27,7 +27,7 @@ router.post('/create', upload.single('upfile'), async (req, res, next) => {
 		values = [writer, content];
 		const [r] = await pool.execute(sql, values);
 
-        //gbookfile 저장
+    //gbookfile 저장
 		if(req.file) {
 			let { originalname, filename, size, mimetype } = req.file;
 			sql = 'INSERT INTO gbookfile SET oriname=?, savename=?, size=?, type=?, gid=?';
@@ -39,6 +39,7 @@ router.post('/create', upload.single('upfile'), async (req, res, next) => {
 	}
 	catch(err) {
 		next(error(err));
+// utils 에서 받아온 error코드(404, 500 코드)를 담아 err을 error-mw에 넘기고, error-mw에서 error 메세지 구성하고, error.ejs에서 에러화면구성후 출력
 	}
 });
 
