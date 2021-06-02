@@ -1,3 +1,5 @@
+// client화면과 server사이에서 화면에 표시될 구성요소를 만들어주는 역할?
+
 const createError = require('http-errors');
 
 const error404 = ((req, res, next) => {

@@ -1,3 +1,6 @@
+// Dynamic Router들은 동적 화면 구성에 필요한 module들을 연결하여 관리하고,
+// client의 요청을 받으면 화면을 구성할 정보를 가져오며,
+// client가 전송한 데이터를 DB에 저장하는 파일이다. (client와 server 사이에서 연결을 담당한다.)
 const express = require('express');
 const router = express.Router();
 const { pool } = require('../modules/mysql-init');

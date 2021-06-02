@@ -1,3 +1,4 @@
+/* 화면을 구성하는 ejs파일들의 디자인 */
 .gbook-tb td > img {max-width: 32px; max-height: 32px;}
 .gbook-tb tr > td:nth-child(1) {width: 10%;}
 .gbook-tb tr > td:nth-child(2) {width: 18%;}
