@@ -123,10 +123,12 @@ ON A.id = B.eid
 WHERE B.pay >= 3000000 
 ORDER BY A.id ASC 
 LIMIT 0, 10;
+```
 
 
-
--- SELECT => JOIN절
--- SELECT => AS절: B.id AS payid (B의 id라는 항목명을 payid로 바꿔줌)
-
+### 외부접속 권한문제
+```sql
+USE mysql;
+ALTER USER 'shop'@'%' IDENTIFIED WITH mysql_native_password BY '관리자 비밀번호';
+FLUSH PRIVILEGES;
 ```

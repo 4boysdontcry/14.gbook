@@ -5,10 +5,15 @@ const app = express();
 const path = require('path');
 require('dotenv').config();
 require('./modules/server-init')(app, 3000);
+const session = require('./modules/session-init');
 
 
 /**************** Middlewares ******************/
 const { createError, error404, error500 } = require('./middlewares/error-mw');
+
+// session
+app.set('trust proxy', 1)   // trust first proxy
+app.use(session());   //session-init
 
 
 /**************** Views ******************/
