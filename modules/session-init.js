@@ -2,7 +2,7 @@
 
 const session = require('express-session');
 const MySQLStore = require('express-mysql-session')(session);
-// 세션을 메모리에 저장하지 않고 mysql DB에 저장하기 위해 사용함 (메모리에 저장하면 용량이 커지는 경우 서버 터짐)
+// 세션을 메모리에 저장하지 않고 mysql DB에 저장하기 위해 사용함 (mysql에 알아서 session 테이블을 만들어서 쿠키를 저장)
 
 const storeOptions = {    // 이 내용을 가지고 DB 사용자 권한에 접근(접속)하여 저장
 	host: process.env.DB_HOST,    // 민감한 정보이기 때문에 dotenv에 넣어서 저장
@@ -14,7 +14,7 @@ const storeOptions = {    // 이 내용을 가지고 DB 사용자 권한에 접�
 
 
 const options = {
-  secret: process.env.SESSION_SALT,   // client에게 나눠줄 인증키를 암호화시켜서 준다
+  secret: process.env.SESSION_SALT,   // SESSION_SALT : client에게 나눠줄 인증키를 암호화시켜서 준다
   resave: false,
   saveUninitialized: true,
   cookie: { secure: false },   // http로 통신하는 경우 false, https로 통신하면 true(유료)
