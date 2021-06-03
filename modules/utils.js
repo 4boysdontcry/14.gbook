@@ -17,6 +17,7 @@ const error = (err) => {
 // 게시글 저장 메세지
 const alert = (msg, loc='/') => `<script> alert('${msg}'); location.href='${loc}'; </script>`;
 
+// 날짜 만들어주기
 const transDate = (date, type) => {
     switch(type){
         case 'YMDHMS':
@@ -43,5 +44,36 @@ const transFrontSrc = name => name ? '/uploads/' + name.substr(0, 6) + '/' + nam
 const transBackSrc = name => name ? '/storages/' + name.substr(0, 6) + '/' + name : null;
 
 
+// pager 만들기
+const makePager = (_page, _totalRecord, _listCnt=10, _pagerCnt=5) => {
+	let page = Number(_page);
+	let totalRecord = Number(_totalRecord);
+	let listCnt = Number(_listCnt);
+	let pagerCnt = Number(_pagerCnt);
+	let totalPage = Math.ceil(totalRecord / listCnt);
+	let startIdx = (page - 1) * listCnt;
+	let startPage = Math.floor((page - 1) / pagerCnt) * pagerCnt + 1;
+	let endPage = (startPage + pagerCnt - 1 > totalPage) ? totalPage : startPage + pagerCnt - 1;
+	let nextPage = (page + 1 > totalPage) ? totalPage : page + 1;
+	let prevPage = (page - 1 < 1) ? 1 : page - 1;
+	let nextPager = (endPage + 1 > totalPage) ? totalPage : endPage + 1;
+	let prevPager = (startPage - 1 < 1) ? 1 : startPage - 1;
+	return { 
+		page, 
+		totalRecord, 
+		listCnt, 
+		pagerCnt, 
+		totalPage,
+		startIdx,
+		startPage,
+		endPage,
+		nextPage,
+		prevPage,
+		nextPager,
+		prevPager 
+	}
+}
 
-module.exports = { alert, error, createError, imgExt, docExt, allowExt, transFrontSrc, transBackSrc, transDate };
+
+
+module.exports = { alert, error, createError, imgExt, docExt, allowExt, transFrontSrc, transBackSrc, transDate, makePager };

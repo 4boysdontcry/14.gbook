@@ -5,7 +5,7 @@ const express = require('express');
 const router = express.Router();
 const { pool } = require('../modules/mysql-init');
 const { upload } = require('../modules/multer-init');
-const { error, alert, transDate, transFrontSrc } = require('../modules/utils');
+const { error, alert, transDate, transFrontSrc, makePager } = require('../modules/utils');
 
 
 const ejs = {
@@ -16,20 +16,25 @@ const ejs = {
     js: 'gbook',
 }
 
-router.get('/', async (req,res,next) => {
-	try{
+router.get(['/', '/list', '/list/:page'], async (req, res, next) => {
+	try {
 		let sql, values;
-		// const toast = req.query.toast;
-		sql = 'SELECT G.*, F.savename FROM gbook G LEFT JOIN gbookfile F ON G.id = F.gid ORDER BY G.id DESC';
-		const [r] = await pool.execute(sql);		// sql = form에서 입력한 데이터를 db에 저장한것
-		r.forEach(v => v.createdAt = transDate(v.cteatedAt, 'YMDHM'));
-		r.forEach(v => v.savename = transFrontSrc(v.savename));
-		res.render('gbook/gbook.ejs', { ...ejs, lists: r, /* toast */})
+		sql = 'SELECT COUNT(id) FROM gbook';
+		const [[r]] = await pool.execute(sql);
+		let [totalRecord] = Object.values(r);
+		let page = req.params.page || 1;
+		let pager = makePager(page, totalRecord, 4, 3);
+		sql = `SELECT G.*, F.savename FROM gbook G LEFT JOIN gbookfile F ON G.id = F.gid ORDER BY G.id DESC LIMIT ?, ?`;
+		values = [String(pager.startIdx), String(pager.listCnt)];
+		const [r2] = await pool.execute(sql, values);
+		r2.forEach(v => v.createdAt = transDate(v.createdAt, 'YMD-KO'));
+		r2.forEach(v => v.savename = transFrontSrc(v.savename));
+		res.render('gbook/gbook', { ...ejs, lists: r2, pager });
 	}
-	catch(err){
+	catch(err) {
 		next(error(err));
 	}
-})
+});
 
 router.post('/create', upload.single('upfile'), async (req, res, next) => {
 	try {
