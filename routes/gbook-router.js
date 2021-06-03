@@ -3,10 +3,9 @@
 // client가 전송한 데이터를 DB에 저장하는 파일이다. (client와 server 사이에서 연결을 담당한다.)
 const express = require('express');
 const router = express.Router();
-const moment = require('moment');
 const { pool } = require('../modules/mysql-init');
 const { upload } = require('../modules/multer-init');
-const { error } = require('../modules/utils');
+const { error, alert, transDate, transFrontSrc } = require('../modules/utils');
 
 
 const ejs = {
@@ -20,14 +19,12 @@ const ejs = {
 router.get('/', async (req,res,next) => {
 	try{
 		let sql, values;
-		const toast = req.query.toast;
+		// const toast = req.query.toast;
 		sql = 'SELECT G.*, F.savename FROM gbook G LEFT JOIN gbookfile F ON G.id = F.gid ORDER BY G.id DESC';
 		const [r] = await pool.execute(sql);		// sql = form에서 입력한 데이터를 db에 저장한것
-		r.forEach(v => { 
-			v.createdAt = moment(v.cteatedAt).format('YYYY-MM-DD');
-			v.savename = v.savename ? '/uploads/'+ v.savename.substr(0, 6) + '/' + v.savename : null;
-		});
-		res.render('gbook/gbook.ejs', { ...ejs, lists: r, toast})
+		r.forEach(v => v.createdAt = transDate(v.cteatedAt, 'YMDHM'));
+		r.forEach(v => v.savename = transFrontSrc(v.savename));
+		res.render('gbook/gbook.ejs', { ...ejs, lists: r, /* toast */})
 	}
 	catch(err){
 		next(error(err));
@@ -51,7 +48,8 @@ router.post('/create', upload.single('upfile'), async (req, res, next) => {
 			values = [originalname, filename, size, mimetype, r.insertId];
 			const [r2] = await pool.execute(sql, values);
 		}
-		res.redirect('/gbook?toast=C');
+		res.send(alert('저장되었습니다.', '/gbook'));
+		// res.redirect('/gbook?toast=C');
 	}
 	catch(err) {
 		next(error(err));
