@@ -34,8 +34,10 @@ app.use('/uploads', express.static(path.join(__dirname, './storages')));
 
 /**************** Router: dynamic ******************/   // 동적화면을 만들어주는 라우터들을 연결하여 관리
 const gbookRouter = require('./routes/gbook-router');
+const authRouter = require('./routes/auth-router');
 
 app.use('/gbook', gbookRouter);
+app.use('/auth', authRouter);
 
 
 /**************** Router: error ******************/

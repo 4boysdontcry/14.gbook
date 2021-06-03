@@ -66,3 +66,6 @@ label {user-select: none;}
 .swiper-button-prev, 
 .swiper-button-next, 
 .swiper-pagination * {outline: none; cursor: pointer;}
+
+
+.btn {color: #fff !important;}
