@@ -1,6 +1,7 @@
 <style>
   .pager-container .page-item.active .page-link {background-color: #8c8c8c; border-color: #8c8c8c;}
 </style>
+<!-- b4-pagination-default : 부트스트랩의 메서드로 만들어 냄 -->
 <nav class="pager-container d-flex justify-content-center my-5">
 	<ul class="pagination pager-wrapper">
 		<li class="page-item">
@@ -12,9 +13,9 @@
 		<li class="page-item">
 			<a class="page-link" href="/gbook/list/<%= prevPage %>"><i class="bi-chevron-left"></i></a>
 		</li>
-		<% for(let i=startPage; i<=endPage; i++) { %>
-			<li class="page-item <%= (i === page) ? 'active' : '' %>">
-				<a class="page-link" href="/gbook/list/<%= i %>"><%= i %></a>
+		<% for(let i=startPage; i<=endPage; i++) { %>		<!-- startPage는 1,2,3에선 1이나오고 4,5,6에선 무조건 4가 나옴, endPage는 3과 6이 나옴 -->
+			<li class="page-item <%= (i === page) ? 'active' : '' %>">		<!-- page = 현재 페이지: i가 현재페이지면 active를 줘라 -->
+				<a class="page-link" href="/gbook/list/<%= i %>"><%= i %></a>		<!-- pagerCnt가 3이므로 123 / 456 으로 세개씩 나눠져서 만들어짐 -->
 			</li>
 		<% } %>
 		<li class="page-item">

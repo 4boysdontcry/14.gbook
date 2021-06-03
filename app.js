@@ -11,7 +11,8 @@ const session = require('./modules/session-init');
 /**************** Middlewares ******************/
 const { createError, error404, error500 } = require('./middlewares/error-mw');
 
-// session
+
+/**************** Session ******************/
 app.set('trust proxy', 1)   // trust first proxy
 app.use(session());   //session-init
 

@@ -2,9 +2,10 @@
 
 const session = require('express-session');
 const MySQLStore = require('express-mysql-session')(session);
+// 세션을 메모리에 저장하지 않고 mysql DB에 저장하기 위해 사용함 (메모리에 저장하면 용량이 커지는 경우 서버 터짐)
 
-const storeOptions = {
-	host: process.env.DB_HOST,
+const storeOptions = {    // 이 내용을 가지고 DB 사용자 권한에 접근(접속)하여 저장
+	host: process.env.DB_HOST,    // 민감한 정보이기 때문에 dotenv에 넣어서 저장
 	port: process.env.DB_PORT,
 	user: process.env.DB_USER,
 	password: process.env.DB_PASS,
@@ -21,4 +22,4 @@ const options = {
 }
 
 
-module.exports = () => session(options);    // middleware
+module.exports = () => session(options);    // app.js에 함수를 리턴한다. options을 넣어서
