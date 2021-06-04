@@ -12,7 +12,7 @@ const ejs = {
 	pageMode: ''
 }
 
-router.get('/idchk/:userid', async (req, res, next) => {
+router.get('/idchk/:userid', async (req, res, next) => {		// 
 	try {
 		let sql;
 		let userid = req.params.userid;

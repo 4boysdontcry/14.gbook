@@ -7,6 +7,7 @@ require('./modules/server-init')(app, 3000);
 const session = require('./modules/session-init');
 const local = require('./middlewares/local-mw');
 
+
 /**************** Middlewares ******************/
 const { createError, error404, error500 } = require('./middlewares/error-mw');
 
@@ -17,17 +18,21 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, './views'));
 app.locals.pretty = true;
 
+
 /**************** req.body ******************/
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+
 
 /**************** Sessions ******************/
 app.use(session()); // req.session 생성
 app.use(local); // res.locals.user 생성
 
+
 /**************** Router: static ******************/
 app.use('/', express.static(path.join(__dirname, './public')));
 app.use('/uploads', express.static(path.join(__dirname, './storages')));
+
 
 /**************** Router: dynamic ******************/
 const gbookRouter = require('./routes/gbook-router');
