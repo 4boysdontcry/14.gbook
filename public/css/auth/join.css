@@ -2,7 +2,9 @@
 .join-wrapper .list { margin-bottom: 1em; }
 .join-wrapper .list > .title { margin-bottom: .5em; font-size: 1.125em; color: #4a99ff;}
 .join-wrapper .list > .content { }
-.join-wrapper .list > .warning { padding: .5em; display: none; }
+.join-wrapper .list > .warning { padding: .5em; display: none; color: #ff7676; }
+.join-wrapper .list > .warning.success { color: #93d14d; }
 
 .join-wrapper input.active { border: 1px solid #569fff; background-color: #bddaff;}
 .join-wrapper input.danger { border: 1px solid #ff7676; background-color: #fdbfbf;}
+.join-wrapper input.success { border: 1px solid #93d14d; background-color: #cdeea2;}
