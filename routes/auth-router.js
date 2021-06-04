@@ -62,11 +62,11 @@ router.get('/signout', (req, res, next) => {
   res.send( alert('로그아웃 되었습니다.', '/') );
 });
 
-router.get('/join', (req, res, next) => {
+router.get('/join', (req, res, next) => {    // GET: 화면을 만들어줌
 	res.render('auth/join', { ...ejs, pageMode: 'JOIN', pageDesc: '기존회원분은 아래의 버튼을 클릭하여 로그인 해 주세요.' });
 });
 
-router.post('/join', async (req, res, next) => {
+router.post('/join', async (req, res, next) => {    // POST: DB에 데이터 저장
 	try {
 		let sql, values;
 		let { userid, userpw, username, email } = req.body;
