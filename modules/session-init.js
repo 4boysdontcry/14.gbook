@@ -17,9 +17,9 @@ const options = {
   secret: process.env.SESSION_SALT,   // SESSION_SALT : client에게 나눠줄 인증키를 암호화시켜서 준다
   resave: false,
   saveUninitialized: true,
-  cookie: { secure: false },   // http로 통신하는 경우 false, https로 통신하면 true(유료)
+  cookie: { secure: false },   // http로 통신하는 경우
   store: new MySQLStore(storeOptions)
 }
 
 
-module.exports = () => session(options);    // app.js에 함수를 리턴한다. options을 넣어서
+module.exports = () => { return session(options); };    // app.js에 함수를 리턴한다. options을 넣어서
