@@ -8,7 +8,7 @@
         <h3 class="title text-center">
             <i class="fa fa-user-edit"></i> 회원가입 - Member Join
         </h3>
-        <form class="join-wrap" method="POST" action="/auth/join">
+        <form class="join-wrap" method="POST" action="/auth/join" name="joinForm">
             <div class="list">
                 <div class="title">아이디</div>
                 <div class="content">
@@ -19,14 +19,14 @@
             <div class="list">
                 <div class="title">패스워드</div>
                 <div class="content">
-                    <input type="password" name="userpw" class="form-control active" placeholder="패스워드를 입력하세요.">
+                    <input type="password" name="userpw" class="form-control" placeholder="패스워드를 입력하세요.">
                 </div>
                 <div class="warning"></div>
             </div>
             <div class="list">
                 <div class="title">패스워드 확인</div>
                 <div class="content">
-                    <input type="password" name="userpw2" class="form-control danger" placeholder="패스워드를 입력하세요.">
+                    <input type="password" name="userpw2" class="form-control" placeholder="패스워드를 입력하세요.">
                 </div>
                 <div class="warning"></div>
             </div>
