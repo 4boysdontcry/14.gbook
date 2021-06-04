@@ -1,10 +1,13 @@
 <link rel="stylesheet" href="/css/header.css">
 <header class="header-wrapper">
-  <div class="logo">LOGO</div>
-  <div class="navi-wrap">
-    <a href="/gbook">GuestBook</a>
-    <a href="/auth/signout">SignOut</a>
-    <a href="/auth/signin">SignIn</a>
-    <a href="/auth/join">Join</a>
-  </div>
+	<div class="logo">LOGO</div>
+	<div class="navi-wrap">
+		<a href="/gbook">GuestBook</a>
+		<% if(user) { %>
+			<a href="/auth/signout">SignOut</a>
+		<% } else { %>
+			<a href="/auth/sign">SignIn</a>
+			<a href="/auth/join">Join</a>
+		<% } %>
+	</div>
 </header>
