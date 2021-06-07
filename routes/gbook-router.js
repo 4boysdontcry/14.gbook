@@ -6,6 +6,7 @@ const router = express.Router();
 const { pool } = require('../modules/mysql-init');
 const { upload } = require('../modules/multer-init');
 const { error, alert, transDate, transFrontSrc, makePager } = require('../modules/utils');
+const { isAdmin, isDorment, isGuest, isUser, isVip } = require('../middlewares/auth-mw');
 
 
 const ejs = {
@@ -36,7 +37,7 @@ router.get(['/', '/list', '/list/:page'], async (req, res, next) => {
 	}
 });
 
-router.post('/create', upload.single('upfile'), async (req, res, next) => {
+router.post('/create', isUser, upload.single('upfile'), async (req, res, next) => {
 	try {
 		let sql, values;
 		// gbook 저장
