@@ -1,4 +1,4 @@
-/* ******************************* form validation ************************************ */
+/* ********** form validation ********** */
 function onCreate( f ) {
   if( f.writer.value.trim() === '' ){
       $(f.writer).addClass( 'require' );
@@ -28,4 +28,12 @@ function onBlur ( el ) {
       $( el ).addClass( 'require' );
       $( el.form ).find('.require-comment').show().text( ($( el ).attr('name') ==='writer' ? '작성자를' : '내용을') + ' 입력하세요.' );
   };
+}
+
+function onFormReset(f){
+  $(f).find('.form-wrapper').removeClass('active');
+  $(f).find('input[name="id"]').val('');
+  $(f).find('input[name="writer"]').val('');
+  $(f).find('input[name="content"]').val('');
+  $(f).find('.img-wrap img').attr('src', '');
 }
