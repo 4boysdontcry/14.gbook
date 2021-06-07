@@ -49,28 +49,52 @@ router.get(['/', '/list', '/list/:page'], async (req, res, next) => {		// sessio
 	}
 });
 
-router.post('/create', isUser, upload.single('upfile'), async (req, res, next) => {		// session에 user정보가 있을때(login되어있을때: isUser), 글을 DB에 저장
+		// session에 user정보가 있을때(login되어있을때: isUser), 글을 DB에 저장
+router.post('/save', isUser, upload.single('upfile'), async (req, res, next) => {
 	try {
-		let sql, values;
-		// gbook 저장
-		let { writer, content } = req.body;		// body에서 입력한 데이터를 가져옴
-		sql = 'INSERT INTO gbook SET writer=?, content=?, uid=?';		// mysql 입력명령
-		values = [writer, content, req.session.user.id];		// 넣을 데이터 지정
-		const [r] = await pool.execute(sql, values);		// 입력 명령과 지정한 데이터를 mysql DB에 저장
-    //gbookfile 저장
-		if(req.file) {
-			let { originalname, filename, size, mimetype } = req.file;		// client가 업로드한 파일을 sql에 저장
-			sql = 'INSERT INTO gbookfile SET oriname=?, savename=?, size=?, type=?, gid=?';
-			values = [originalname, filename, size, mimetype, r.insertId];
-			const [r2] = await pool.execute(sql, values);
+		let sql, values; 
+		let { writer, content, id } = req.body;
+		if(id && id !== '') { // 수정
+			console.log('수정');
+			sql = 'UPDATE gbook SET writer=?, content=? WHERE id=? AND uid=?';
+			var [r] = await pool.execute(sql, [writer, content, id, req.session.user.id]);
+			r.id = id;
 		}
-		res.send(alert('저장되었습니다.', '/gbook'));
+		else { // 저장
+			console.log('저장');
+			sql = 'INSERT INTO gbook SET writer=?, content=?, uid=?';
+			var [r] = await pool.execute(sql, [writer, content, req.session.user.id]);
+			r.id = r.insertId;
+		}
+		if(req.file) { // 첨부파일 처리
+			console.log(r);
+			let { originalname, filename, size, mimetype, isExist=false } = req.file;
+			if(id && id !== '') { // 수정에서 기존 파일 삭제
+				sql = 'SELECT savename FROM gbookfile WHERE gid=?';
+				const [r2] = await pool.execute(sql, [id]);
+				if(r2.length) {
+					await fs.remove(transBackSrc(r2[0].savename));
+					isExist = true;
+				}
+			}
+			if(isExist) {
+				sql = 'UPDATE gbookfile SET oriname=?, savename=?, size=?, type=? WHERE gid=?';
+			}
+			else {
+				sql = 'INSERT INTO gbookfile SET oriname=?, savename=?, size=?, type=?, gid=?';
+			}
+			values = [originalname, filename, size, mimetype, r.id];
+			const [r3] = await pool.execute(sql, values); // gbookfile 처리
+
+			if(id) res.send(alert('수정되었습니다.', '/'));
+			else res.send(alert('저장되었습니다.', '/'));
+		}		
 	}
 	catch(err) {
 		next(error(err));
-// utils 에서 받아온 error코드(404, 500 코드)를 담아 err을 error-mw에 넘기고, error-mw에서 error 메세지 구성하고, error.ejs에서 에러화면구성후 출력
 	}
 });
+
 
 router.get('/remove/:id', isUser, async (req, res, next) => {		// session에 user정보가 있을때(login되어있을때: isUser), 등록한 글 삭제
 	try {
@@ -109,30 +133,31 @@ router.get('/view/:id', isUser, async (req, res, next) => {		// '/:id'로 쓰는
 	}
 });
 
-router.get('/file/remove', async (req, res, next) => {
+router.get('/file/remove', isUser, async (req, res, next) => {
 	try {
 		let sql, values;
 		sql = 'SELECT F.savename FROM gbook G LEFT JOIN gbookfile F ON G.id = F.gid WHERE G.id=? AND G.uid=? AND F.id=?';
 		const [r] = await pool.execute(sql, [req.query.id, req.session.user.id, req.query.fid]);
-		if(r.length === 1){
+		if(r.length === 1) {
 			sql = 'DELETE FROM gbookfile WHERE id=?';
 			const [r2] = await pool.execute(sql, [req.query.fid]);
-			if(res.affectedRows == 1){ 
-				await fs.remove(transBackSrc(r[0].saveneme));
-				res.status(200).json({code: 200, success: true});
+			if(r2.affectedRows === 1) {
+				await fs.remove(transBackSrc(r[0].savename));
+				res.status(200).json({ code: 200, success: true });
 			}
-			else{
-				res.status(200).json({code: 200, success: false});		// 통신에 성공했지만 데이터가 없는 경우(error는 아님)
+			else {
+				res.status(200).json({ code: 200, success: false });
 			}
 		}
-		else{
-			res.status(200).json({code: 200, success: false});		// 통신에 성공했지만 데이터가 없는 경우(error는 아님)
+		else {
+			res.status(200).json({ code: 200, success: false });
 		}
 	}
-	catch(err){
-		res.status(500).json({code: 500, err});
+	catch(err) {
+		console.log(err);
+		res.status(500).json({ code: 500, err });
 	}
-})
+});
 
 
 
