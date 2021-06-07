@@ -55,19 +55,16 @@ router.post('/save', isUser, upload.single('upfile'), async (req, res, next) => 
 		let sql, values; 
 		let { writer, content, id } = req.body;
 		if(id && id !== '') { // 수정
-			console.log('수정');
 			sql = 'UPDATE gbook SET writer=?, content=? WHERE id=? AND uid=?';
 			var [r] = await pool.execute(sql, [writer, content, id, req.session.user.id]);
 			r.id = id;
 		}
 		else { // 저장
-			console.log('저장');
 			sql = 'INSERT INTO gbook SET writer=?, content=?, uid=?';
 			var [r] = await pool.execute(sql, [writer, content, req.session.user.id]);
 			r.id = r.insertId;
 		}
 		if(req.file) { // 첨부파일 처리
-			console.log(r);
 			let { originalname, filename, size, mimetype, isExist=false } = req.file;
 			if(id && id !== '') { // 수정에서 기존 파일 삭제
 				sql = 'SELECT savename FROM gbookfile WHERE gid=?';
@@ -77,18 +74,14 @@ router.post('/save', isUser, upload.single('upfile'), async (req, res, next) => 
 					isExist = true;
 				}
 			}
-			if(isExist) {
-				sql = 'UPDATE gbookfile SET oriname=?, savename=?, size=?, type=? WHERE gid=?';
-			}
-			else {
-				sql = 'INSERT INTO gbookfile SET oriname=?, savename=?, size=?, type=?, gid=?';
-			}
+			sql = isExist ? 
+			'UPDATE gbookfile SET oriname=?, savename=?, size=?, type=? WHERE gid=?' :
+			'INSERT INTO gbookfile SET oriname=?, savename=?, size=?, type=?, gid=?';
 			values = [originalname, filename, size, mimetype, r.id];
 			const [r3] = await pool.execute(sql, values); // gbookfile 처리
-
-			if(id) res.send(alert('수정되었습니다.', '/'));
-			else res.send(alert('저장되었습니다.', '/'));
 		}		
+		if(id && id !== '') res.send(alert('수정되었습니다.', '/'));
+		else res.send(alert('저장되었습니다.', '/'));
 	}
 	catch(err) {
 		next(error(err));
@@ -105,11 +98,11 @@ router.get('/remove/:id', isUser, async (req, res, next) => {		// session에 use
 		sql = 'DELETE FROM gbook WHERE id=? AND uid=?'; // 글 레코드 삭제함 -> 첨부파일 레코드도 삭제됨
 		const [r2] = await pool.execute(sql, [id, req.session.user.id]);
 		if(r2.affectedRows === 1) { // 글 레코드 및 첨부파일 레코드가 삭제됐다면...
-			await fs.remove(transBackSrc(r[0].savename));	// 실제 첨부파일 삭제(storages폴더에 저장된 파일 삭제)
+			if(r.length === 1) await fs.remove(transBackSrc(r[0].savename));	// 실제 첨부파일 삭제(storages폴더에 저장된 파일 삭제)
 			res.redirect('/');
 		}
 		else {
-			next(error('삭제가 실패하였습니다.')); // 글 삭제 실패
+			next(error('삭제에 실패하였습니다.')); // 글 삭제 실패
 		}
 	}
 	catch(err) {
@@ -158,7 +151,6 @@ router.get('/file/remove', isUser, async (req, res, next) => {
 		res.status(500).json({ code: 500, err });
 	}
 });
-
 
 
 module.exports = router;
