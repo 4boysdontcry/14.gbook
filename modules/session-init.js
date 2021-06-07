@@ -18,7 +18,7 @@ const options = {
   resave: false,
   saveUninitialized: true,
   cookie: { secure: false },   // http로 통신하는 경우
-  store: new MySQLStore(storeOptions)
+  store: new MySQLStore(storeOptions)   // 세션정보를 저장할 곳 지정
 }
 
 

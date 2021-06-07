@@ -41,8 +41,8 @@ router.post('/create', upload.single('upfile'), async (req, res, next) => {
 		let sql, values;
 		// gbook 저장
 		let { writer, content } = req.body;		// body에서 입력한 데이터를 가져옴
-		sql = 'INSERT INTO gbook SET writer=?, content=?';		// mysql 입력명령
-		values = [writer, content];		// 넣을 데이터 지정
+		sql = 'INSERT INTO gbook SET writer=?, content=?, uid=?';		// mysql 입력명령
+		values = [writer, content, req.session.user.id];		// 넣을 데이터 지정
 		const [r] = await pool.execute(sql, values);		// 입력 명령과 지정한 데이터를 mysql DB에 저장
     //gbookfile 저장
 		if(req.file) {

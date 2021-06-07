@@ -26,7 +26,7 @@ app.use(express.urlencoded({ extended: false }));
 
 /**************** Sessions ******************/
 app.use(session()); // req.session 생성
-app.use(local); // res.locals.user 생성
+app.use(local()); // res.locals.user 생성
 
 
 /**************** Router: static ******************/
