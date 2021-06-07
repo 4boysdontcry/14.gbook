@@ -17,7 +17,7 @@ const ejs = {
 }
 
 
-router.get(['/', '/list', '/list/:page'], async (req, res, next) => {
+router.get(['/', '/list', '/list/:page'], async (req, res, next) => {		// list는 session에 user정보가 없어도 보여지기 때문에 따로 옵션을 주지 않음
 	try {
 		let sql, values;
 		sql = 'SELECT COUNT(id) FROM gbook';		// gbook에 저장된 행렬의 id 개수를 세서 가져옴
@@ -38,7 +38,7 @@ router.get(['/', '/list', '/list/:page'], async (req, res, next) => {
 	}
 });
 
-router.post('/create', isUser, upload.single('upfile'), async (req, res, next) => {
+router.post('/create', isUser, upload.single('upfile'), async (req, res, next) => {		// session에 user정보가 있을때
 	try {
 		let sql, values;
 		// gbook 저장
@@ -61,7 +61,7 @@ router.post('/create', isUser, upload.single('upfile'), async (req, res, next) =
 	}
 });
 
-router.get('/remove/:id', isUser, async (req, res, next) => {
+router.get('/remove/:id', isUser, async (req, res, next) => {		// session에 user정보가 있을때(login되어있을때: isUser), 등록한 글 삭제
 	try {
 		let sql, values;
 		let id = req.params.id;
@@ -70,7 +70,7 @@ router.get('/remove/:id', isUser, async (req, res, next) => {
 		sql = 'DELETE FROM gbook WHERE id=? AND uid=?'; // 글 레코드 삭제함 -> 첨부파일 레코드도 삭제됨
 		const [r2] = await pool.execute(sql, [id, req.session.user.id]);
 		if(r2.affectedRows === 1) { // 글 레코드 및 첨부파일 레코드가 삭제됐다면...
-			await fs.remove(transBackSrc(r[0].savename));	// 실제 첨부파일 삭제
+			await fs.remove(transBackSrc(r[0].savename));	// 실제 첨부파일 삭제(storages폴더에 저장된 파일 삭제)
 			res.redirect('/');
 		}
 		else {

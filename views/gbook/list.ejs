@@ -11,7 +11,7 @@
     <% if(user){ %>
     <td>
         <%if(user && user.id) { %>
-            <button onclick="onUpdate('<%= v.id %>')" class="btn btn-sm btn-success">수정</button>
+            <button onclick="onUpdate('<%= v.id %>')" class="btn btn-sm btn-success">수정</button>      <!-- 삭제할 데이터의 아이디를 받아서 -->
             <button onclick="onDelete('<%= v.id %>')" class="btn btn-sm btn-danger">삭제</button>
         <% } %>
     </td>

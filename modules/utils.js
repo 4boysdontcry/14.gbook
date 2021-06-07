@@ -43,7 +43,7 @@ const transDate = (date, type) => {
     }
 }
 const transFrontSrc = name => name ? '/uploads/' + name.substr(0, 6) + '/' + name : null;
-const transBackSrc = name => name ? path.join(__dirname, '../storages', name.substr(0, 6), name) : null;
+const transBackSrc = name => name ? path.join(__dirname, '../storages', name.substr(0, 6), name) : null;		// storages에 저장된 파일에 접근하는 경로
 
 
 // pager 만들기
