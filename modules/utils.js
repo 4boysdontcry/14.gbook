@@ -1,5 +1,7 @@
 const createError = require('http-errors');
-const moment = require('moment')
+const moment = require('moment');
+const path = require('path');
+
 
 // multer - filefilter
 const imgExt = ['jpg', 'jpeg', 'png', 'gif'];
@@ -41,7 +43,7 @@ const transDate = (date, type) => {
     }
 }
 const transFrontSrc = name => name ? '/uploads/' + name.substr(0, 6) + '/' + name : null;
-const transBackSrc = name => name ? '/storages/' + name.substr(0, 6) + '/' + name : null;
+const transBackSrc = name => name ? path.join(__dirname, '../storages', name.substr(0, 6), name) : null;
 
 
 // pager 만들기
