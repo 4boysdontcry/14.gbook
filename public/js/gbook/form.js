@@ -36,4 +36,21 @@ function onFormReset(f){
   $(f).find('input[name="writer"]').val('');
   $(f).find('input[name="content"]').val('');
   $(f).find('.img-wrap img').attr('src', '');
+  $(f).find('.img-remove').data('id', '');
+  $(f).find('.img-remove').data('fid', '');
 }
+
+$('.img-remove').click(function(){
+  if(confirm('첨부파일을 삭제하시겠습니까? 삭제 후에는 복구되지 않습니다.')){
+    var id = $(this).data('id');
+    var fid = $(this).data('fid');
+    // 127.0.0.1:3000/gbook/file/remove?id=6&fid=5
+    $.get('/gbook/file/remove/', {id: id, fid: fid}).then(onGet).catch(onErr);
+    function onGet(r){    // res.status(200)은 다 여기로 들어옴
+      console.log(r);
+  }
+  function onErr(err){    // res.status(500)은 다 여기로 들어옴
+    console.log(err.responseText);
+  }
+}
+});

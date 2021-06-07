@@ -93,10 +93,10 @@ router.get('/remove/:id', isUser, async (req, res, next) => {		// session에 use
 	}
 });
 
-router.get('/view/:id', isUser, async (req, res, next) => {
+router.get('/view/:id', isUser, async (req, res, next) => {		// '/:id'로 쓰는 경우 뒤에 오는 create나 list들이 id로 들어가버리는 상황을 막기 위해 맨 밑에 작성한다
 	try {
 		let sql, values;
-		sql = 'SELECT G.*, F.savename FROM gbook G LEFT JOIN gbookfile F ON G.id = F.gid WHERE G.id=? AND G.uid=?';
+		sql = 'SELECT G.*, F.savename, F.id AS fid FROM gbook G LEFT JOIN gbookfile F ON G.id = F.gid WHERE G.id=? AND G.uid=?';
 		const [r] = await pool.execute(sql, [req.params.id, req.session.user.id]);
 		if(r.length == 1){
 			r[0].savename = transFrontSrc(r[0].savename);
@@ -109,7 +109,30 @@ router.get('/view/:id', isUser, async (req, res, next) => {
 	}
 });
 
-// '/:id'로 쓰는 경우 뒤에 오는 create나 list들이 id로 들어가버리는 상황을 막기 위해 맨 밑에 작성한다.
+router.get('/file/remove', async (req, res, next) => {
+	try {
+		let sql, values;
+		sql = 'SELECT F.savename FROM gbook G LEFT JOIN gbookfile F ON G.id = F.gid WHERE G.id=? AND G.uid=? AND F.id=?';
+		const [r] = await pool.execute(sql, [req.query.id, req.session.user.id, req.query.fid]);
+		if(r.length === 1){
+			sql = 'DELETE FROM gbookfile WHERE id=?';
+			const [r2] = await pool.execute(sql, [req.query.fid]);
+			if(res.affectedRows == 1){ 
+				await fs.remove(transBackSrc(r[0].saveneme));
+				res.status(200).json({code: 200, success: true});
+			}
+			else{
+				res.status(200).json({code: 200, success: false});		// 통신에 성공했지만 데이터가 없는 경우(error는 아님)
+			}
+		}
+		else{
+			res.status(200).json({code: 200, success: false});		// 통신에 성공했지만 데이터가 없는 경우(error는 아님)
+		}
+	}
+	catch(err){
+		res.status(500).json({code: 500, err});
+	}
+})
 
 
 
