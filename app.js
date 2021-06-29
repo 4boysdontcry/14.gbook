@@ -3,6 +3,7 @@ require('dotenv').config();
 const express = require('express');
 const app = express();
 const path = require('path');
+const helmet = require('helmet')
 require('./modules/server-init')(app, 3000);
 const session = require('./modules/session-init');
 const local = require('./middlewares/local-mw');
@@ -20,6 +21,7 @@ app.locals.pretty = true;
 
 
 /**************** req.body ******************/
+app.use(helmet({contentSecurityPolicy: false}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
